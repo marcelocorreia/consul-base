@@ -1,0 +1,18 @@
+[Unit]
+Description=Consul Agent
+Requires=network-online.target private-ip.service
+After=network-online.target private-ip.service
+
+[Service]
+Type=idle
+EnvironmentFile=-/etc/default/private-ip
+EnvironmentFile=-/etc/default/consul_base
+Environment=GOMAXPROCS=2
+ExecStart=/usr/local/bin/consul agent ${CONSUL_AGENT_MODE} -datacenter {{cluster.environment}} -config-dir {{consul.config_dir}} -data-dir /var/consul/data/ -bind ${PRIVATE_IP} -retry-join "provider=aws tag_key=consul-join tag_value=${CONSUL_JOIN_TAG}" ${CONSUL_EXTRA_OPTIONS}
+Requires=network-online.target
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

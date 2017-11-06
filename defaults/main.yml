@@ -1,0 +1,24 @@
+---
+systemd:
+  path: "{{ systemd_path | default('/lib/systemd/system') }}"
+dnsmasq:
+  path: "{{ dnsmasq_path | default('/etc/dnsmasq.d') }}"
+
+consul:
+  join:
+  bootstrap_expect: "{{ consul_bootstrap_expect | default('2') }}"
+#  nginx_hostname_pattern: ""
+  config_dir: "/etc/consul.d"
+  iface: "{{ consul_iface | default('eth0') }}"
+  aws_region: "{{ consul_aws_region | default('ap-southeast-2') }}"
+
+hashicorp:
+  system_user: "ubuntu"
+  system_group: "ubuntu"
+  apps:
+    - name: consul
+      state: present
+      version: 1.0.0
+    - name: consul-template
+      state: present
+      version: 0.19.4

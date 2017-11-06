@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Marcelo Correia
+  company: Star Visitor
+  description: "Setup consul base role"
+  min_ansible_version: 1.4
+  license: MIT
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - system
+  - development
+
+dependencies: []

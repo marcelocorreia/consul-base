@@ -1,0 +1,37 @@
+---
+- name: Creates consul directory
+  file:
+    path: "{{consul.config_dir}}"
+    owner: root
+    group: root
+    state: directory
+
+- name: Systemd Consul Service
+  template:
+    src: consul-server.service.j2
+    dest: "{{systemd.path}}/consul.service"
+    mode: 0644
+
+- name: Systemd Consul Env
+  template:
+    src: etc_default_consul_base.j2
+    dest: "/etc/default/consul_base"
+    mode: 0644
+
+- name: Consul dnsmasq config
+  template:
+    src: 10-consul.j2
+    dest: "{{dnsmasq.path}}/10-consul"
+    mode: 0644
+
+- name: dnsmasq restarts
+  service:
+    name: dnsmasq
+    state: restarted
+
+- name: Consul as service
+  service:
+    name: consul
+    enabled: yes
+    state: started
+  ignore_errors: true
